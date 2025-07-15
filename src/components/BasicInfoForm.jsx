@@ -1,8 +1,16 @@
 import React, { useState } from "react";
 
-export default function BasicInfoForm({ next }) {
-  const [p1, setP1] = useState({ name: "", age: "", gender: "Male" });
-  const [p2, setP2] = useState({ name: "", age: "", gender: "Female" });
+export default function BasicInfoForm({ next, initialValues = {}, otherInitialValues = {} }) {
+  const [p1, setP1] = useState({
+    name: initialValues.name || "",
+    age: initialValues.age || "",
+    gender: initialValues.gender || "Male",
+  });
+  const [p2, setP2] = useState({
+    name: otherInitialValues.name || "",
+    age: otherInitialValues.age || "",
+    gender: otherInitialValues.gender || "Female",
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -27,6 +35,7 @@ export default function BasicInfoForm({ next }) {
 
     next({ person1: p1, person2: p2 });
   };
+  
 
   return (
     <form onSubmit={handleSubmit}>

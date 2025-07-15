@@ -39,8 +39,8 @@ const questions = [
 ];
 
 export default function PersonalitySection({ answers, next, prev }) {
-  const [person1, setPerson1] = useState({});
-  const [person2, setPerson2] = useState({});
+  const [person1, setPerson1] = useState(answers.personality?.person1||{});
+  const [person2, setPerson2] = useState(answers.personality?.person2||{});
 
   const handleChange = (key, val, who) => {
     if (who === "p1") setPerson1((p) => ({ ...p, [key]: val }));

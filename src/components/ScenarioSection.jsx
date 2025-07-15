@@ -34,8 +34,8 @@ const questions = [
 ];
 
 export default function ScenarioSection({ answers, next, prev }) {
-  const [person1, setPerson1] = useState({});
-  const [person2, setPerson2] = useState({});
+  const [person1, setPerson1] = useState(answers.scenario?.person1||{});
+  const [person2, setPerson2] = useState(answers.scenario?.person2||{});
 
   const handleChange = (key, val, who) => {
     if (who === "p1") setPerson1((p) => ({ ...p, [key]: val }));

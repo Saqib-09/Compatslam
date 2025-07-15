@@ -47,10 +47,28 @@ const [answers, setAnswers] = useState({
   return (
     <div className="min-h-screen flex flex-col items-center px-2 bg-gradient-to-tr from-green-500 via-blue-200">
       <header className="full max-w-xl flex items-center gap-3 mt-6 mb-2">
-        <img src={logo} alt="Logo" className="h-12" />
-        <h1 className="text-2xl font-bold text-green-800">
-          Marriage Compatibility Checker
-        </h1>
+        <button
+          className="flex items-center gap-3 focus:outline-none"
+          onClick={() => {
+            setShowLanding(true);
+            setStep(0);
+            setAnswers({
+              person1: {},
+              person2: {},
+              islamic: {},
+              personality: {},
+              family: {},
+              dealbreakers: {},
+              scenario: {},
+            });
+          }}
+          title="Go to Landing Page"
+        >
+          <img src={logo} alt="Logo" className="h-12" />
+          <h1 className="text-2xl font-bold text-green-800">
+            Marriage Compatibility Checker
+          </h1>
+        </button>
       </header>
       <main className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl p-8 mb-10">
         {showLanding ? (
@@ -59,15 +77,15 @@ const [answers, setAnswers] = useState({
           <>
             <ProgressBar step={step + 1} totalSteps={steps.length - 1} />
             <AnimatePresence mode="wait">
-              <motion.div
-                key={step}
-                initial={{ opacity: 0, x: 40 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -40 }}
-                transition={{ duration: 0.35, type: "tween" }}
-              >
+                <motion.div
+                  key={step}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.18, type: "tween" }}
+                >
                 {steps[step] === "BasicInfo" ? (
-                  <BasicInfoForm next={next} />
+                  <BasicInfoForm next={next} initialValues={answers.person1} otherInitialValues={answers.person2} />
                 ) : steps[step] === "Islamic" ? (
                   <IslamicSection answers={answers} next={next} prev={prev} />
                 ) : steps[step] === "Personality" ? (
