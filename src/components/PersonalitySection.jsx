@@ -54,7 +54,7 @@ export default function PersonalitySection({ answers, next, prev }) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <h2 className="font-semibold text-lg mb-3">Personality & Life Goals</h2>
+      <h2 className="font-bold text-xl mb-4 px-2 py-1 rounded-md bg-gradient-to-r from-magenta-200 to-pink-120 shadow text-blue-500">Personality & Life Goals</h2>
       <div className="grid grid-cols-2 gap-12">
         {[answers.person1, answers.person2].map((person, i) => (
           <div key={i}>
