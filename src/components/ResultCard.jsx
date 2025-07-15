@@ -2,6 +2,56 @@ import React from "react";
 
 // Helper function for simple compatibility scoring (can be improved)
 function getCompatibility(answers) {
+  // Define which answers are "similar" (partial matches)
+  const fuzzyMatches = {
+    family: {
+      familysetup: [
+        ["Nuclear family", "Flexible"],
+        ["Joint family", "Flexible"],
+        ["Flexible", "Depends on circumstances"],
+        ["Nuclear family", "Depends on circumstances"],
+        ["Joint family", "Depends on circumstances"]
+      ],
+      parents: [
+        ["Close", "Very close"],
+        ["Somewhat close", "Close"],
+        ["Somewhat close", "Very close"]
+      ],
+      inlaws: [
+        ["Frequent contact", "Like immediate family"],
+        ["Occasional contact", "Frequent contact"]
+      ],
+      social: [
+        ["Often", "Very much"],
+        ["Sometimes", "Often"]
+      ]
+    },
+    personality: {
+      social: [
+        ["Introvert", "Somewhat introvert"],
+        ["Extrovert", "Somewhat extrovert"]
+      ],
+      career: [
+        ["Ambitious", "Very ambitious"],
+        ["Somewhat", "Ambitious"]
+      ],
+      worklife: [
+        ["Balanced", "Family-focused"],
+        ["Balanced", "Work-focused"],
+        ["Flexible/Depends", "Balanced"]
+      ],
+      relocation: [
+        ["Open if needed", "Absolutely open"],
+        ["Maybe", "Open if needed"]
+      ],
+      hobbies: [
+        ["Important", "Very important"],
+        ["Somewhat important", "Important"]
+      ]
+    },
+    // You can add more fuzzy maps for other sections if you want
+  };
+
   const sections = [
     "islamic",
     "personality",
@@ -9,28 +59,42 @@ function getCompatibility(answers) {
     "dealbreakers",
     "scenario"
   ];
+
   const result = {};
+
   sections.forEach(section => {
     const p1 = answers[section]?.person1 || {};
     const p2 = answers[section]?.person2 || {};
-    let total = 0, match = 0, details = [];
-    Object.keys(p1).forEach(k => {
+    let total = 0,
+      score = 0,
+      details = [];
+    Object.keys(p1).forEach(key => {
       total++;
-      if (p1[k] === p2[k]) {
-        match++;
-        details.push({ question: k, type: "match" });
+      if (p1[key] === p2[key]) {
+        score += 1;
+        details.push({ question: key, type: "match" });
+      } else if (
+        fuzzyMatches[section] &&
+        fuzzyMatches[section][key] &&
+        fuzzyMatches[section][key].some(
+          ([a, b]) =>
+            (p1[key] === a && p2[key] === b) ||
+            (p1[key] === b && p2[key] === a)
+        )
+      ) {
+        score += 0.5; // Give 0.5 for partial/fuzzy match
+        details.push({ question: key, type: "fuzzy" });
       } else {
-        details.push({ question: k, type: "diff" });
+        details.push({ question: key, type: "diff" });
       }
     });
     result[section] = {
-      percent: total ? Math.round((match / total) * 100) : 0,
+      percent: total ? Math.round((score / total) * 100) : 0,
       details
     };
   });
   return result;
 }
-
 export default function ResultCard({ answers, prev }) {
   const comp = getCompatibility(answers);
 
